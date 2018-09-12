@@ -1,0 +1,12 @@
+/* Generic Style Attributes */
+body {
+	background-color: white;
+	width: 1000px;
+}
+/* Custom Class Attributes */
+
+/* Custom ID Attributes */
+#logo {
+	width: 50px;
+	height: auto;
+}
