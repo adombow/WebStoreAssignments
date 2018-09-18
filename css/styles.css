@@ -20,20 +20,49 @@
     height: 150px;
 }
 
+.product {
+    position: relative;
+}
+
+.price {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(29, 106, 154, 0.72);
+    color: #fff;
+    visibility: hidden;
+    opacity: 0;
+    padding: 0;
+
+    transition: opacity .2s, visibility .2s;
+}
+
+.product:hover .price{
+    visibility: visible;
+    opacity: 0.9;
+}
+
 /* Custom ID Attributes */
 #logo {
     width: 50px;
     height: auto;
 }
 
-#productList {
-    position: relative;
-    width: 50%;
-    margin: 0 auto;
-    text-align: center;
+#menu {
+    list-style-type: none;
+    display: inline-block;
+    width: 35%;
     vertical-align: top;
 }
 
-#productList:hover .overlay {
-    opacity: 0.5;
+#productList {
+    position: relative;
+    width: 65%;
+    margin: 0 auto;
+    padding: 0;
+    text-align: center;
+    vertical-align: top;
+    float: left;
 }
