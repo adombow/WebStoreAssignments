@@ -9,45 +9,96 @@
 
 .product {
     width: 200px;
-    min-height: 250px;
     border: 1px solid #000;
     display: inline-block;
     margin: 5px;
 }
 
-.productImg {
-    width: 150px;
-    height: 150px;
-}
-
-.product {
+#productList .product {
+    display: inline-block;
+    vertical-align: middle;
     position: relative;
 }
 
-.price {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(29, 106, 154, 0.72);
-    color: #fff;
-    visibility: hidden;
-    opacity: 0;
-    padding: 0;
-
-    transition: opacity .2s, visibility .2s;
+.product .cell {
+    text-align: center;
+    display: block;
+    position: relative;
+    overflow: hidden;
 }
 
-.product:hover .price{
-    visibility: visible;
+.productImg {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    display: block;
+    width: 150px;
+    height: 150px;
+    transform: scale(1);
+    transition: all 1s;
+}
+
+#productList .product:hover .productImg {
+    transform: scale(1.05);
+}
+
+.overlay {
+    position: absolute;
+    display: block;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    margin: auto;
+    background: #3DC0F1;
+    opacity: 0;
+    transition: all 0.6s;
+}
+
+.productName {
+    position: relative;
+    z-index: 1;
+}
+
+.price {
+    display: block;
+    padding: 5px 20px;
+    box-sizing: border-box;
+    position: absolute;
+    left: 25%;
+    top: 40%;
+    width: 50%;
+    text-align: center;
+    text-transform: capitalize;
+    font-size: 18px;
+    font-weight: bold;
+    font-family: 'Cambria', sans-serif;
+    font-weight: normal;
+    color: #000000;
+    background-color: rgb(255, 145, 0);
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: all .3s;
+}
+
+#productList .product:hover .price {
+    transform: translateY(0px);
     opacity: 0.9;
+}
+
+#productList .product:hover .overlay{
+    opacity: 0.8;
 }
 
 /* Custom ID Attributes */
 #logo {
-    width: 50px;
-    height: auto;
+    width: auto;
+    height: 200px;
+}
+
+#banner {
+    width: auto;
+    height: 200px;
 }
 
 #menu {
@@ -62,7 +113,9 @@
     width: 65%;
     margin: 0 auto;
     padding: 0;
+    list-style: none;
     text-align: center;
     vertical-align: top;
+    background-color: #fff;
     float: left;
 }
