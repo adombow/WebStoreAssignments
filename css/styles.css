@@ -42,51 +42,33 @@
 }
 
 .product {
+    display: inline-block;
     width: 200px;
     border: 1px solid #151A20;
-    display: inline-block;
+    background-color: #fff;
     margin: 5px;
-}
-
-#productList .product {
-    display: inline-block;
     vertical-align: middle;
     position: relative;
+    text-align: center;
+    overflow: hidden;
+    transition: all 0.6s;
 }
 
-.product .cell {
-    text-align: center;
-    display: block;
-    position: relative;
-    overflow: hidden;
+.product:hover {   
+    background-color: rgba(123, 151, 198, 0.7)
 }
 
 .productImg {
     margin-left: auto;
     margin-right: auto;
     margin-top: 20px;
-    display: block;
     width: 150px;
     height: 150px;
-    transform: scale(1);
-    transition: all 1s;
+    transition: all 0.5s;
 }
 
-#productList .product:hover .productImg {
+.product:hover .productImg {
     transform: scale(1.05);
-}
-
-.overlay {
-    position: absolute;
-    display: block;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    margin: auto;
-    background: #7B97C6;
-    opacity: 0;
-    transition: all 0.6s;
 }
 
 .productName {
@@ -95,7 +77,6 @@
 }
 
 .price {
-    display: block;
     padding: 5px 20px;
     box-sizing: border-box;
     position: absolute;
@@ -103,11 +84,9 @@
     top: 40%;
     width: 50%;
     text-align: center;
-    text-transform: capitalize;
     font-size: 18px;
     font-weight: bold;
     font-family: 'Cambria', sans-serif;
-    font-weight: normal;
     color: #151A20;
     background-color: #D2B22C;
     opacity: 0;
@@ -115,13 +94,9 @@
     transition: all .3s;
 }
 
-#productList .product:hover .price {
+.product:hover .price {
     transform: translateY(0px);
     opacity: 0.9;
-}
-
-#productList .product:hover .overlay{
-    opacity: 0.8;
 }
 
 /* Custom ID Attributes */
