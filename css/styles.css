@@ -7,9 +7,43 @@
     margin:0 auto;
 }
 
+.contentDiv {
+    float: left;
+    font-family: "Trebuchet MS", Helvetica, sans-serif;
+}
+
+.menuItem {
+    width: 140px;
+    height: 50px;
+    margin: 10px 0;
+    text-align: center;
+    border: 1px solid #151A20;
+    background-color: #22276C;
+    transition: all .2s;
+}
+
+.menuItem:hover {
+    background-color: #7B97C6;
+    transform: scale(1.025);
+}
+
+.menuItem .menuItemText {
+    color: #D2B22C;
+    font-weight: normal;
+}
+
+.menuItem:hover .menuItemText {
+    color: #fff;
+    font-weight: bold;
+}
+
+.menuItemLink {
+    text-decoration: none;
+}
+
 .product {
     width: 200px;
-    border: 1px solid #000;
+    border: 1px solid #151A20;
     display: inline-block;
     margin: 5px;
 }
@@ -50,12 +84,13 @@
     bottom: 0;
     right: 0;
     margin: auto;
-    background: #3DC0F1;
+    background: #7B97C6;
     opacity: 0;
     transition: all 0.6s;
 }
 
 .productName {
+    color: #151A20;
     position: relative;
 }
 
@@ -73,8 +108,8 @@
     font-weight: bold;
     font-family: 'Cambria', sans-serif;
     font-weight: normal;
-    color: #000000;
-    background-color: rgb(255, 145, 0);
+    color: #151A20;
+    background-color: #D2B22C;
     opacity: 0;
     transform: translateY(-20px);
     transition: all .3s;
@@ -93,28 +128,43 @@
 #logo {
     width: auto;
     height: 200px;
+    margin: 0 8px;
 }
 
 #banner {
     width: auto;
     height: 200px;
+    margin: 0 12px;
+}
+
+#content {
+    margin: 10px 0;
 }
 
 #menu {
+    position: absolute;
+    width: 35%;
+    margin: 0 auto;
     list-style-type: none;
     display: inline-block;
-    width: 35%;
-    vertical-align: top;
 }
 
 #productList {
     position: relative;
     width: 65%;
-    margin: 0 auto;
+    margin: 0 200px;
     padding: 0;
     list-style: none;
     text-align: center;
-    vertical-align: top;
     background-color: #fff;
-    float: left;
+}
+
+#footer {
+    vertical-align: bottom;
+    font-size: 14px;
+    text-align: center;
+}
+
+.footerText {
+    margin: 0;
 }
