@@ -95,6 +95,52 @@
 }
 
 .product:hover .price {
+    transform: translateY(10px);
+    opacity: 0.9;
+}
+
+.btn-add {
+    background-color: rgb(53, 201, 58); /* Green */
+    position: absolute;
+    left: 10%;
+    top: 10%;
+    width: 40%;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 10px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all .3s;
+}
+
+.product:hover .btn-add {
+    transform: translateY(0px);
+    opacity: 0.9;
+}
+
+.btn-remove {
+    background-color: rgb(226, 46, 14); /* Green */
+    position: absolute;
+    right: 10%;
+    top: 10%;
+    width: 40%;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 10px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all .3s;
+}
+
+.product:hover .btn-remove {
     transform: translateY(0px);
     opacity: 0.9;
 }

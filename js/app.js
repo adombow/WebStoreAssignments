@@ -5,9 +5,11 @@ function Store(initialStock) {
 }
 
 Store.prototype.addItemToCart = function(itemName) {
+    console.log("Item " + itemName + " Added");
 }
 
 Store.prototype.removeItemFromCart = function(itemName) {
+    console.log("Item " + itemName + " Removed");
 }
 
 var products = {
