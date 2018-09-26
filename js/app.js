@@ -84,3 +84,5 @@ var products = {
         quantity: 5
     }
 };
+
+var store = new Store(products);
