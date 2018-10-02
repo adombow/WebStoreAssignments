@@ -107,4 +107,4 @@ var store = new Store(products);
 
 var showCart = function(cart) {
     alert(cart);
-}
+};
