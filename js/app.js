@@ -5,11 +5,27 @@ function Store(initialStock) {
 }
 
 Store.prototype.addItemToCart = function(itemName) {
-    console.log("Item " + itemName + " Added");
+    if (this.stock[itemName].quantity > 0) {
+        console.log("Item " + itemName + " added");
+        this.cart[itemName] = this.cart.hasOwnProperty(itemName) ? this.cart[itemName] + 1 : 1;
+        this.stock[itemName].quantity--;
+    }
+    else {
+        console.log("Item " + itemName + " sold out");
+    }
 }
 
 Store.prototype.removeItemFromCart = function(itemName) {
-    console.log("Item " + itemName + " Removed");
+    if (this.cart.hasOwnProperty(itemName)) {
+        console.log("Item " + itemName + " removed");
+        if (--this.cart[itemName] == 0) {
+            delete this.cart[itemName];
+        }
+        this.stock[itemName].quantity++;
+    }
+    else {
+        console.log("Item " + itemName + " not in cart");
+    }
 }
 
 var products = {
@@ -90,3 +106,7 @@ var products = {
 var store = new Store(products);
 
 var inactiveTime = 0;
+
+var showCart = function(cart) {
+    alert(cart);
+};
