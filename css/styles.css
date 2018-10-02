@@ -145,6 +145,13 @@
     opacity: 0.9;
 }
 
+#btn-show-cart {
+    width: 140px;
+    height: 50px;
+    margin: 10px 40px;
+    text-align: center;
+}
+
 /* Custom ID Attributes */
 #logo {
     width: auto;
