@@ -108,5 +108,11 @@ var store = new Store(products);
 var inactiveTime = 0;
 
 var showCart = function(cart) {
-    alert(cart);
+    console.log(cart);
+    var cartString = Object.keys(cart).length > 0 ? "" : "Cart is empty"; // using Objects.keys() for reliability
+    for (var key in cart) {
+        cartString += key + " : " + cart[key] + "\n";
+    }
+    alert(cartString);
+    return cartString;
 };
