@@ -88,3 +88,5 @@ var products = {
 };
 
 var store = new Store(products);
+
+var inactiveTime = 0;
