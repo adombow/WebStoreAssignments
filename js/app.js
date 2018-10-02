@@ -113,4 +113,4 @@ var showCart = function(cart) {
     }
     alert(cartString);
     return cartString;
-}
+};
