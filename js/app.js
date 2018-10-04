@@ -4,7 +4,8 @@ function Store(initialStock) {
     this.cart = {};
 }
 
-Store.prototype.addItemToCart = function(itemName) {
+Store.prototype.addItemToCart = function (itemName) {
+    stopPurchaseTimeout();
     if (this.stock[itemName].quantity > 0) {
         console.log("Item " + itemName + " added");
         this.cart[itemName] = this.cart.hasOwnProperty(itemName) ? this.cart[itemName] + 1 : 1;
@@ -13,9 +14,11 @@ Store.prototype.addItemToCart = function(itemName) {
     else {
         console.log("Item " + itemName + " sold out");
     }
+    createPurchaseTimeout();
 }
 
-Store.prototype.removeItemFromCart = function(itemName) {
+Store.prototype.removeItemFromCart = function (itemName) {
+    stopPurchaseTimeout();
     if (this.cart.hasOwnProperty(itemName)) {
         console.log("Item " + itemName + " removed");
         if (--this.cart[itemName] == 0) {
@@ -26,6 +29,7 @@ Store.prototype.removeItemFromCart = function(itemName) {
     else {
         console.log("Item " + itemName + " not in cart");
     }
+    createPurchaseTimeout();
 }
 
 var products = {
@@ -105,14 +109,35 @@ var products = {
 
 var store = new Store(products);
 
-var inactiveTime = 0;
-
-var showCart = function(cart) {
+var showCart = function (cart) {
+    stopPurchaseTimeout();
     console.log(cart);
     var cartString = Object.keys(cart).length > 0 ? "" : "Cart is empty"; // using Objects.keys() for reliability
     for (var key in cart) {
         cartString += key + " : " + cart[key] + "\n";
     }
     alert(cartString);
+    createPurchaseTimeout();
     return cartString;
 };
+
+var currTimeout;
+var shouldTimeout = true; //Just change this to false if you don't want the timeout running
+
+function createPurchaseTimeout() {
+    if (shouldTimeout) {
+        currTimeout = setTimeout(
+            function () {
+                alert("Hey there, freeloader!  Were you actually planning on buying anything or did" +
+                    "you just want to waste our server resources?");
+                //alert is blocking so timeout will not be reset until alert is closed
+                createPurchaseTimeout();
+            }, 30000); //Timeout set for 30s
+    }
+}
+
+function stopPurchaseTimeout() {
+    clearTimeout(currTimeout);
+}
+
+window.onload = createPurchaseTimeout();

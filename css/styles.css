@@ -1,8 +1,13 @@
 /* Generic Style Attributes */
+html, body{
+    height: 100%;
+}
 
 /* Custom Class Attributes */
 .wrap {
     background-color: white;
+    min-height: 100%;
+    position: relative;
     width: 1000px;
     margin:0 auto;
 }
@@ -147,11 +152,8 @@
     opacity: 0.9;
 }
 
-#btn-show-cart {
-    width: 140px;
-    height: 50px;
-    margin: 10px 40px;
-    text-align: center;
+.footerText {
+    margin: 0;
 }
 
 /* Custom ID Attributes */
@@ -168,13 +170,14 @@
 }
 
 #content {
+    padding-bottom: 45px;
     margin: 10px 0;
 }
 
 #menu {
     position: absolute;
     width: 35%;
-    margin: 0 auto;
+    margin: 7% auto;
     list-style-type: none;
     display: inline-block;
 }
@@ -193,8 +196,49 @@
     vertical-align: bottom;
     font-size: 14px;
     text-align: center;
+    margin-bottom: 10px;
 }
 
-.footerText {
-    margin: 0;
+#btn-show-cart {
+    background: #1aab8a;
+    color: #fff;
+    position: absolute;
+    border: none;
+    width: 142px;
+    height: 50px;
+    margin: 10px 40px;
+    font-size: 1.2em;
+    padding: 0 2em;
+    cursor: pointer;
+    transition: .5s ease all;
+    outline: none;
+    text-align: center;
+}
+
+#btn-show-cart:hover {
+    background: #fff;
+    color: #1aab8a;
+}
+
+#btn-show-cart::before, #btn-show-cart::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 2px;
+    width: 0;
+    background: #1aab8a;
+    transition: .25s ease all;
+}
+
+#btn-show-cart::after {
+    right: inherit;
+    top: inherit;
+    left: 0;
+    bottom: 0;
+}
+
+#btn-show-cart:hover::before, #btn-show-cart:hover::after {
+    width: 100%;
+    transition: .5s ease all;
 }
