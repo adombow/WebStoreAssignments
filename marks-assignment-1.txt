@@ -1,0 +1,5 @@
+Task 1: 2
+Task 2: 2
+Task 3A: 3
+Task 3B: 3
+Total: 10
