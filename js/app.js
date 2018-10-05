@@ -123,16 +123,17 @@ var showCart = function (cart) {
 
 var currTimeout;
 var shouldTimeout = true; //Just change this to false if you don't want the timeout running
+var TIMEOUT_MS = 30000; //Timeout set for 30s
 
 function createPurchaseTimeout() {
     if (shouldTimeout) {
         currTimeout = setTimeout(
             function () {
-                alert("Hey there, freeloader!  Were you actually planning on buying anything or did" +
+                alert("Hey there, freeloader!  Were you actually planning on buying anything or did " +
                     "you just want to waste our server resources?");
                 //alert is blocking so timeout will not be reset until alert is closed
                 createPurchaseTimeout();
-            }, 30000); //Timeout set for 30s
+            }, TIMEOUT_MS);
     }
 }
 

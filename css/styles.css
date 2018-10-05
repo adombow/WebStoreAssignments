@@ -1,5 +1,5 @@
 /* Generic Style Attributes */
-html, body{
+html, body {
     height: 100%;
 }
 
@@ -208,7 +208,7 @@ html, body{
     height: 50px;
     margin: 10px 40px;
     font-size: 1.2em;
-    padding: 0 2em;
+    padding: 0 1.2em;
     cursor: pointer;
     transition: .5s ease all;
     outline: none;
