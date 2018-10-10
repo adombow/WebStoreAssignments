@@ -141,4 +141,73 @@ function stopPurchaseTimeout() {
     clearTimeout(currTimeout);
 }
 
-window.onload = createPurchaseTimeout();
+window.addEventListener("load", createPurchaseTimeout());
+//Need wrapper function otherwise getElement will fire before the html is placed
+window.addEventListener("load", function () {
+    renderProductList(document.getElementById("productView"), store)
+});
+
+function renderProduct(container, storeInstance, itemName) {
+    var product = storeInstance.stock[itemName];
+
+    //Clear the container first
+    container.innerHTML = '';
+
+    var image = document.createElement("img");
+    image.setAttribute("class", "productImg");
+    image.setAttribute("src", "images/" + itemName + "_$" + product.price + ".png");
+    image.setAttribute("alt", itemName);
+    container.appendChild(image);
+
+    var prodName = document.createElement("p");
+    prodName.setAttribute("class", "productName");
+    var nameNode = document.createTextNode(itemName);
+    prodName.appendChild(nameNode);
+    container.appendChild(prodName);
+
+    var price = document.createElement("span");
+    price.setAttribute("class", "price");
+    var priceNode = document.createTextNode(product.price);
+    price.appendChild(priceNode);
+    container.appendChild(price);
+
+    //Product can be added to cart as quantity is not 0
+    if (product.quantity > 0) {
+        var btnAdd = document.createElement("button");
+        btnAdd.setAttribute("class", "btn-add");
+        btnAdd.setAttribute("type", "button");
+        btnAdd.addEventListener("click", function () { storeInstance.addItemToCart(itemName) }, false);
+        var addBtnNode = document.createTextNode("Add Item To Cart");
+        btnAdd.appendChild(addBtnNode);
+        container.appendChild(btnAdd);
+    }
+
+    //Product can be removed from cart as it's currently in the cart
+    if (storeInstance.cart.hasOwnProperty(itemName)) {
+        var btnRmv = document.createElement("button");
+        btnRmv.setAttribute("class", "btn-remove");
+        btnRmv.setAttribute("type", "button");
+        btnRmv.addEventListener("click", function () { storeInstance.removeItemFromCart(itemName) }, false);
+        var rmvBtnNode = document.createTextNode("Remove Item From Cart");
+        btnRmv.appendChild(rmvBtnNode);
+        container.appendChild(btnRmv);
+    }
+}
+
+function renderProductList(container, storeInstance) {
+    //Clear the container first
+    container.innerHTML = '';
+
+    var productList = document.createElement("ul");
+    productList.setAttribute("id", "productList");
+    container.appendChild(productList);
+
+    for (var product in storeInstance.stock) {
+        var listItem = document.createElement("li");
+        listItem.setAttribute("class", "product");
+        listItem.setAttribute("id", "product-" + product);
+        productList.appendChild(listItem);
+
+        renderProduct(listItem, storeInstance, product);
+    }
+}

@@ -182,6 +182,11 @@ html, body {
     display: inline-block;
 }
 
+#productView {
+    float: left;
+    font-family: "Trebuchet MS", Helvetica, sans-serif;
+}
+
 #productList {
     position: relative;
     width: 65%;
