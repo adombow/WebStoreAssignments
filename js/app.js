@@ -122,7 +122,7 @@ var showCart = function (cart) {
 };
 
 var currTimeout;
-var shouldTimeout = true; //Just change this to false if you don't want the timeout running
+var shouldTimeout = false; //Just change this to false if you don't want the timeout running
 var TIMEOUT_MS = 30000; //Timeout set for 30s
 
 function createPurchaseTimeout() {
