@@ -2,6 +2,7 @@
 function Store(initialStock) {
     this.stock = initialStock;
     this.cart = {};
+    this.onUpdate = null;
 }
 
 Store.prototype.addItemToCart = function (itemName) {
@@ -10,6 +11,7 @@ Store.prototype.addItemToCart = function (itemName) {
         console.log("Item " + itemName + " added");
         this.cart[itemName] = this.cart.hasOwnProperty(itemName) ? this.cart[itemName] + 1 : 1;
         this.stock[itemName].quantity--;
+        this.onUpdate(itemName);
     }
     else {
         console.log("Item " + itemName + " sold out");
@@ -25,6 +27,7 @@ Store.prototype.removeItemFromCart = function (itemName) {
             delete this.cart[itemName];
         }
         this.stock[itemName].quantity++;
+        this.onUpdate(itemName);
     }
     else {
         console.log("Item " + itemName + " not in cart");
@@ -147,11 +150,17 @@ window.addEventListener("load", function () {
     renderProductList(document.getElementById("productView"), store)
 });
 
+store.onUpdate = function(itemName){
+    renderProduct(document.getElementById("product-" + itemName), this, itemName);
+}
+
 function renderProduct(container, storeInstance, itemName) {
     var product = storeInstance.stock[itemName];
 
     //Clear the container first
-    container.innerHTML = '';
+    while(container.firstChild) {
+        container.removeChild(container.firstChild);
+    }
 
     var image = document.createElement("img");
     image.setAttribute("class", "productImg");
@@ -196,7 +205,9 @@ function renderProduct(container, storeInstance, itemName) {
 
 function renderProductList(container, storeInstance) {
     //Clear the container first
-    container.innerHTML = '';
+    while(container.firstChild) {
+        container.removeChild(container.firstChild);
+    }
 
     var productList = document.createElement("ul");
     productList.setAttribute("id", "productList");
