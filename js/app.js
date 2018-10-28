@@ -122,8 +122,10 @@ var showCart = function (cart) {
 };
 
 var hideCart = function () {
+    stopPurchaseTimeout();
     var modal = document.getElementById("modal");
     modal.style.visibility = "hidden";
+    createPurchaseTimeout();
 }
 
 var currTimeout;
