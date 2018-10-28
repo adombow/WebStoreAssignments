@@ -115,14 +115,16 @@ var store = new Store(products);
 var showCart = function (cart) {
     stopPurchaseTimeout();
     console.log(cart);
-    var cartString = Object.keys(cart).length > 0 ? "" : "Cart is empty"; // using Objects.keys() for reliability
-    for (var key in cart) {
-        cartString += key + " : " + cart[key] + "\n";
-    }
-    alert(cartString);
+    var modal = document.getElementById("modal");
+    modal.style.visibility = "visible";
+    renderCart(document.getElementById("modal-content"), store);
     createPurchaseTimeout();
-    return cartString;
 };
+
+var hideCart = function () {
+    var modal = document.getElementById("modal");
+    modal.style.visibility = "hidden";
+}
 
 var currTimeout;
 var shouldTimeout = false; //Just change this to false if you don't want the timeout running
@@ -152,6 +154,7 @@ window.addEventListener("load", function () {
 
 store.onUpdate = function(itemName){
     renderProduct(document.getElementById("product-" + itemName), this, itemName);
+    renderCart(document.getElementById("modal-content"), this);
 }
 
 function renderProduct(container, storeInstance, itemName) {
@@ -221,4 +224,61 @@ function renderProductList(container, storeInstance) {
 
         renderProduct(listItem, storeInstance, product);
     }
+}
+
+function renderCart(container, storeInstance) {
+    // Clear the container first
+    while(container.firstChild) {
+        container.removeChild(container.firstChild);
+    }
+
+    var cartTable = document.createElement("table");
+    cartTable.setAttribute("id", "cart-table");
+    cartTable.cellPadding = "4px";
+    container.appendChild(cartTable);
+
+    var firstRow = document.createElement("tr");
+    firstRow.setAttribute("id", "cart-column-border-bottom");
+    firstRow.appendChild(createColumnTitle("Item"));
+    firstRow.appendChild(createColumnTitle("Quantity"));
+    firstRow.appendChild(createColumnTitle("Price"));
+    cartTable.appendChild(firstRow);
+
+    var totalPrice = 0;
+    for (var itemName in storeInstance.cart) {
+        var tableRow = document.createElement("tr");
+        cartTable.appendChild(tableRow);
+        // item name
+        var tdName = document.createElement("td");
+        tdName.textContent = itemName;
+        tableRow.appendChild(tdName);
+        // item quantity and buttons
+        var tdQuantity = document.createElement("td");
+        var quantity = storeInstance.cart[itemName];
+        tdQuantity.textContent = quantity;
+        tableRow.appendChild(tdQuantity);
+        // total price
+        var tdPrice = document.createElement("td");
+        var totalItemPrice = storeInstance.stock[itemName].price * quantity;
+        tdPrice.textContent = "$" + totalItemPrice;
+        tableRow.appendChild(tdPrice);
+
+        totalPrice += totalItemPrice;
+    }
+
+    // total due row
+    var totalDueRow = document.createElement("tr");
+    totalDueRow.setAttribute("id", "cart-column-border-top");
+    // add an empty column first
+    totalDueRow.appendChild(document.createElement("td"));
+    totalDueRow.appendChild(createColumnTitle("Total Due:"));
+    totalDueRow.appendChild(createColumnTitle("$" + totalPrice));
+    cartTable.appendChild(totalDueRow);
+}
+
+function createColumnTitle(title) {
+    var columnTitle = document.createElement("td");
+    columnTitle.setAttribute("class", "cart-column-bold");
+    columnTitle.textContent = title;
+    return columnTitle;
 }

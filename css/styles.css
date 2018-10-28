@@ -220,7 +220,7 @@ html, body {
     text-align: center;
 }
 
-#btn-show-cart:hover {
+#btn-show-cart:hover, #btn-hide-cart:hover {
     background: #fff;
     color: #1aab8a;
 }
@@ -243,7 +243,64 @@ html, body {
     bottom: 0;
 }
 
-#btn-show-cart:hover::before, #btn-show-cart:hover::after {
+#btn-show-cart:hover::before, #btn-show-cart:hover::after, 
+#btn-hide-cart:hover::before, #btn-hide-cart:hover::after {
     width: 100%;
     transition: .5s ease all;
+}
+
+#modal {
+    visibility: hidden;
+    position: fixed;
+    z-index: 1;
+    margin: 0 auto;
+    left: 75%;
+    top: 30%;
+    width: 250px;
+    background-color: rgba(0, 0, 0, 0.5);
+    text-align: center;
+}
+
+#modal-content {
+    padding: 8px;
+    display: inline-block;
+    color: white;
+}
+
+#cart-table {
+    border-collapse: collapse;
+}
+
+#cart-table-data {
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none;
+}
+
+.cart-column-bold {
+    font-weight: bold;
+    font-size: 18px;
+    text-align: center;
+    text-decoration: none;
+    padding: 4px;
+}
+
+#cart-column-border-bottom {
+    border-bottom: 1pt solid white;
+}
+
+#cart-column-border-top {
+    border-top: 1pt solid white;
+}
+
+#btn-hide-cart {
+    display: block;
+    margin: 6px auto;
+    background: #1aab8a;
+    color: #fff;
+    border: none;
+    font-size: 1.0em;
+    padding: 4px 2em;
+    text-align: center;
+    cursor: pointer;
 }
