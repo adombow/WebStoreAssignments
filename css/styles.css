@@ -254,9 +254,14 @@ html, body {
     position: fixed;
     z-index: 1;
     margin: 0 auto;
+    left: 40%;
+    top: 30%;
+    width: 20%;
+    /* below rules make the cart modal look better on the page; however, the assignment asks for it to be centered
     left: 75%;
     top: 30%;
-    width: 250px;
+    width: 280px;
+    */
     background-color: rgba(0, 0, 0, 0.5);
     text-align: center;
 }
@@ -271,26 +276,41 @@ html, body {
     border-collapse: collapse;
 }
 
-#cart-table-data {
+.cart-table-data {
     font-size: 16px;
-    text-align: center;
-    text-decoration: none;
 }
 
-.cart-column-bold {
+.cart-cell-bold {
     font-weight: bold;
     font-size: 18px;
     text-align: center;
     text-decoration: none;
     padding: 4px;
+    color: #FFC300;
 }
 
-#cart-column-border-bottom {
+#cell-total-due {
+    color: #F0F0F0;
+}
+
+#cart-row-border-bottom {
     border-bottom: 1pt solid white;
 }
 
-#cart-column-border-top {
+#cart-row-border-top {
     border-top: 1pt solid white;
+}
+
+.btn-quantity {
+    background: #7B97C6;
+    color: white;
+    text-align: center;
+    font-weight: bold;
+    width: 22px;
+    margin: 4px;
+    padding: 0 2px;
+    cursor: pointer;
+    border: none;
 }
 
 #btn-hide-cart {

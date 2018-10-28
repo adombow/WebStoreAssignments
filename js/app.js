@@ -238,7 +238,7 @@ function renderCart(container, storeInstance) {
     container.appendChild(cartTable);
 
     var firstRow = document.createElement("tr");
-    firstRow.setAttribute("id", "cart-column-border-bottom");
+    firstRow.setAttribute("id", "cart-row-border-bottom");
     firstRow.appendChild(createColumnTitle("Item"));
     firstRow.appendChild(createColumnTitle("Quantity"));
     firstRow.appendChild(createColumnTitle("Price"));
@@ -251,15 +251,17 @@ function renderCart(container, storeInstance) {
         // item name
         var tdName = document.createElement("td");
         tdName.textContent = itemName;
+        tdName.setAttribute("class", "cart-table-data");
         tableRow.appendChild(tdName);
         // item quantity and buttons
-        var tdQuantity = document.createElement("td");
         var quantity = storeInstance.cart[itemName];
-        tdQuantity.textContent = quantity;
+        var tdQuantity = createQuantityCell(storeInstance, itemName, quantity);
+        tdQuantity.setAttribute("class", "cart-table-data");
         tableRow.appendChild(tdQuantity);
         // total price
         var tdPrice = document.createElement("td");
         var totalItemPrice = storeInstance.stock[itemName].price * quantity;
+        tdPrice.setAttribute("class", "cart-table-data");
         tdPrice.textContent = "$" + totalItemPrice;
         tableRow.appendChild(tdPrice);
 
@@ -268,17 +270,40 @@ function renderCart(container, storeInstance) {
 
     // total due row
     var totalDueRow = document.createElement("tr");
-    totalDueRow.setAttribute("id", "cart-column-border-top");
+    totalDueRow.setAttribute("id", "cart-row-border-top");
     // add an empty column first
     totalDueRow.appendChild(document.createElement("td"));
     totalDueRow.appendChild(createColumnTitle("Total Due:"));
-    totalDueRow.appendChild(createColumnTitle("$" + totalPrice));
+    var totalPriceCell = createColumnTitle("$" + totalPrice);
+    totalPriceCell.setAttribute("id", "cell-total-due");
+    totalDueRow.appendChild(totalPriceCell);
     cartTable.appendChild(totalDueRow);
 }
 
 function createColumnTitle(title) {
     var columnTitle = document.createElement("td");
-    columnTitle.setAttribute("class", "cart-column-bold");
+    columnTitle.setAttribute("class", "cart-cell-bold");
     columnTitle.textContent = title;
     return columnTitle;
+}
+
+function createQuantityCell(storeInstance, itemName, quantity) {
+    var quantityCell = document.createElement("td");
+    // create the buttons
+    var incButton = document.createElement("button");
+    var decButton = document.createElement("button");
+    incButton.setAttribute("class", "btn-quantity");
+    decButton.setAttribute("class", "btn-quantity");
+    incButton.appendChild(document.createTextNode("+"));
+    decButton.appendChild(document.createTextNode("-"));
+    incButton.addEventListener("click", function () { storeInstance.addItemToCart(itemName) }, false);
+    decButton.addEventListener("click", function () { storeInstance.removeItemFromCart(itemName) }, false)
+    // create the text content
+    var quantityText = document.createTextNode(quantity);
+    // append children in order
+    quantityCell.appendChild(incButton);
+    quantityCell.appendChild(quantityText);
+    quantityCell.appendChild(decButton);
+
+    return quantityCell;
 }
