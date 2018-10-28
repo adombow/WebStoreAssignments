@@ -307,3 +307,12 @@ function createQuantityCell(storeInstance, itemName, quantity) {
 
     return quantityCell;
 }
+
+// hide cart when escape key is pressed
+document.onkeydown = function(evt) {
+    evt = evt || window.event;
+    if (evt.keyCode == 27) {
+        // escape key
+        hideCart();
+    }
+};
