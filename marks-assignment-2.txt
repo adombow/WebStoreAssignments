@@ -1,0 +1,10 @@
+Task 1:  	2 / 2
+Task 2:  	1 / 1
+Task 3:  	1 / 1
+Task 4A:  	1 / 1
+Task 4B:  	1 / 1
+Task 5A:  	2 / 2
+Task 5B:  	2 / 2
+Task 6:  	2 / 2
+Task 7:  	3 / 3
+Total:  	15 / 15
