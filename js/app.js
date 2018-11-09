@@ -248,3 +248,47 @@ document.onkeydown = function(evt) {
         hideCart();
     }
 };
+
+// function for making AJAX GET calls
+function ajaxGet(url, onSuccess, onError) {
+    var numRetries = 0;
+    var xhr;
+    var getRequest = function() {
+        if (numRetries <= 3) {
+            xhr = new XMLHttpRequest();
+            xhr.open("GET", url);
+            xhr.onload = function() {
+                console.log("xhrStatus = " + xhr.status);
+                if (xhr.status == 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    onSuccess(response);
+                    return;
+                }
+                else {
+                    numRetries++;
+                    getRequest();
+                }
+            }
+            xhr.timeout = 2000; // 2 seconds
+            xhr.ontimeout = function() {
+                console.log("onTimeout");
+                numRetries++;
+                getRequest();
+            }
+            xhr.onerror = function() {
+                console.log("onError");
+                numRetries++;
+                getRequest();
+            }
+            xhr.send();
+        }
+        else {
+            var errMessage = xhr.responseText || "Timed out";
+            console.log("numRetries = " + numRetries + ": " + errMessage);
+            onError(errMessage);
+            return;
+        }
+    }
+
+    getRequest();
+}
