@@ -36,7 +36,104 @@ Store.prototype.removeItemFromCart = function (itemName) {
     createPurchaseTimeout();
 }
 
+Store.prototype.syncWithServer = function (onSync) {
+    var thisStore = this;
+    ajaxGet(this.serverUrl + "/products",
+        function (response) {
+            var delta = {};
+            console.log(response);
+            for (var product in response) {
+                // The product does not exist yet so add it to our stock
+                if (!thisStore.stock.hasOwnProperty(product)) {
+                    thisStore.stock[product] = {
+                        label: response[product].label,
+                        imageUrl: response[product].imageUrl,
+                        price: 0,
+                        quantity: 0
+                    };
+                }
+
+                var currProdPrice = thisStore.stock[product].price;
+                var currProdQuantity = thisStore.stock[product].quantity;
+
+                var deltaPrice = response[product].price - currProdPrice;
+                var deltaQuantity = response[product].quantity - currProdQuantity;
+                var newDelta = {
+                    price: deltaPrice,
+                    quantity: deltaQuantity
+                };
+                if (deltaPrice != 0 && deltaQuantity != 0)
+                    delta[product] = newDelta;
+            }
+
+            for (var deltaProduct in delta) {
+                var currProdPrice = thisStore.stock[deltaProduct].price;
+                var currProdQuantity = thisStore.stock[deltaProduct].quantity;
+                var cartQuantity = 0;
+
+                if (thisStore.cart.hasOwnProperty(deltaProduct)) {
+                    cartQuantity = thisStore.cart[deltaProduct];
+                }
+
+                var totalQuantity = cartQuantity + currProdQuantity + delta[deltaProduct].quantity;
+
+                if (cartQuantity <= totalQuantity)
+                    thisStore.stock[deltaProduct].quantity = totalQuantity - cartQuantity;
+                else {
+                    thisStore.cart[deltaProduct] -= cartQuantity - totalQuantity;
+                    thisStore.stock[deltaProduct].quantity = 0;
+                }
+
+                thisStore.stock[deltaProduct].price = currProdPrice + delta[deltaProduct].price;
+            }
+
+            // re-draw the products
+            thisStore.onUpdate();
+
+            if (onSync != null)
+                onSync(delta);
+        },
+        function (error) {
+            //invoked after all 3 retries fail
+        });
+}
+
+Store.prototype.checkOut = function (onFinish) {
+    var thisStore = this;
+    this.syncWithServer(function (delta) {
+        // If any of the products have changed price/quantity inform the user
+        if (Object.keys(delta).length !== 0) {
+            var deltaStr = "";
+            for (var prod in thisStore.cart) {
+                if (delta.hasOwnProperty(prod)) {
+                    var currPrice = thisStore.stock[prod].price;
+                    if (delta[prod].price != 0 && currPrice - delta[prod].price != 0) {
+                        deltaStr += "Price of " + prod + " changed from $" +
+                            (currPrice - delta[prod].price) + " to $" + currPrice + "\n";
+                    }
+                    var currQuantity = thisStore.stock[prod].quantity + thisStore.cart[prod];
+                    if (delta[prod].quantity != 0 && currQuantity - delta[prod].quantity != 0) {
+                        deltaStr += "Quantity of " + prod + " changed from " +
+                            (currQuantity - delta[prod].quantity) + " to " + currQuantity + "\n";
+                    }
+                }
+            }
+            alert(deltaStr);
+        } else {
+            var totalDue = 0;
+            for (var prod in thisStore.cart) {
+                totalDue += thisStore.cart[prod] * thisStore.stock[prod].price;
+            }
+            alert("The total price of your cart is currently $" + totalDue);
+        }
+
+        if (onFinish != null)
+            onFinish();
+    });
+}
+
 var store = new Store("https://cpen400a-bookstore.herokuapp.com");
+store.syncWithServer();
 
 var showCart = function (cart) {
     stopPurchaseTimeout();
@@ -51,6 +148,16 @@ var hideCart = function () {
     stopPurchaseTimeout();
     var modal = document.getElementById("modal");
     modal.style.visibility = "hidden";
+    createPurchaseTimeout();
+}
+
+var cartCheckOut = function () {
+    stopPurchaseTimeout();
+    var checkOutBtn = document.getElementById("btn-check-out");
+    checkOutBtn.disabled = true;
+    store.checkOut(function () {
+        checkOutBtn.disabled = false;
+    });
     createPurchaseTimeout();
 }
 
@@ -80,7 +187,7 @@ window.addEventListener("load", function () {
     renderProductList(document.getElementById("productView"), store)
 });
 
-store.onUpdate = function(itemName) {
+store.onUpdate = function (itemName) {
     if (typeof itemName == "undefined") {
         renderProductList(document.getElementById("productView"), store);
         return;
@@ -93,13 +200,13 @@ function renderProduct(container, storeInstance, itemName) {
     var product = storeInstance.stock[itemName];
 
     //Clear the container first
-    while(container.firstChild) {
+    while (container.firstChild) {
         container.removeChild(container.firstChild);
     }
 
     var image = document.createElement("img");
     image.setAttribute("class", "productImg");
-    image.setAttribute("src", "images/" + itemName + "_$" + product.price + ".png");
+    image.setAttribute("src", product.imageUrl);
     image.setAttribute("alt", itemName);
     container.appendChild(image);
 
@@ -111,7 +218,7 @@ function renderProduct(container, storeInstance, itemName) {
 
     var price = document.createElement("span");
     price.setAttribute("class", "price");
-    var priceNode = document.createTextNode(product.price);
+    var priceNode = document.createTextNode("$" + product.price);
     price.appendChild(priceNode);
     container.appendChild(price);
 
@@ -140,7 +247,7 @@ function renderProduct(container, storeInstance, itemName) {
 
 function renderProductList(container, storeInstance) {
     //Clear the container first
-    while(container.firstChild) {
+    while (container.firstChild) {
         container.removeChild(container.firstChild);
     }
 
@@ -160,7 +267,7 @@ function renderProductList(container, storeInstance) {
 
 function renderCart(container, storeInstance) {
     // Clear the container first
-    while(container.firstChild) {
+    while (container.firstChild) {
         container.removeChild(container.firstChild);
     }
 
@@ -241,7 +348,7 @@ function createQuantityCell(storeInstance, itemName, quantity) {
 }
 
 // hide cart when escape key is pressed
-document.onkeydown = function(evt) {
+document.onkeydown = function (evt) {
     evt = evt || window.event;
     if (evt.keyCode == 27) {
         // escape key
@@ -253,11 +360,11 @@ document.onkeydown = function(evt) {
 function ajaxGet(url, onSuccess, onError) {
     var numRetries = 0;
     var xhr;
-    var getRequest = function() {
+    var getRequest = function () {
         if (numRetries <= 3) {
             xhr = new XMLHttpRequest();
             xhr.open("GET", url);
-            xhr.onload = function() {
+            xhr.onload = function () {
                 console.log("xhrStatus = " + xhr.status);
                 if (xhr.status == 200) {
                     var response = JSON.parse(xhr.responseText);
@@ -270,12 +377,12 @@ function ajaxGet(url, onSuccess, onError) {
                 }
             }
             xhr.timeout = 2000; // 2 seconds
-            xhr.ontimeout = function() {
+            xhr.ontimeout = function () {
                 console.log("onTimeout");
                 numRetries++;
                 getRequest();
             }
-            xhr.onerror = function() {
+            xhr.onerror = function () {
                 console.log("onError");
                 numRetries++;
                 getRequest();

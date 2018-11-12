@@ -220,7 +220,7 @@ html, body {
     text-align: center;
 }
 
-#btn-show-cart:hover, #btn-hide-cart:hover {
+#btn-show-cart:hover, #btn-hide-cart:hover, #btn-check-out:hover {
     background: #fff;
     color: #1aab8a;
 }
@@ -244,7 +244,8 @@ html, body {
 }
 
 #btn-show-cart:hover::before, #btn-show-cart:hover::after, 
-#btn-hide-cart:hover::before, #btn-hide-cart:hover::after {
+#btn-hide-cart:hover::before, #btn-hide-cart:hover::after,
+#btn-check-out:hover::before, #btn-check-out:hover::after {
     width: 100%;
     transition: .5s ease all;
 }
@@ -257,11 +258,11 @@ html, body {
     left: 40%;
     top: 30%;
     width: 20%;
-    /* below rules make the cart modal look better on the page; however, the assignment asks for it to be centered
+    /* below rules make the cart modal look better on the page; 
+    however, the assignment asks for it to be centered
     left: 75%;
     top: 30%;
-    width: 280px;
-    */
+    width: 280px;*/
     background-color: rgba(0, 0, 0, 0.5);
     text-align: center;
 }
@@ -313,7 +314,7 @@ html, body {
     border: none;
 }
 
-#btn-hide-cart {
+#btn-hide-cart, #btn-check-out {
     display: block;
     margin: 6px auto;
     background: #1aab8a;
