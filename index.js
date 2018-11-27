@@ -43,8 +43,24 @@ app.get('/products', async function(request, response) {
 
 // Configure '/checkout' endpoint
 app.post("/checkout", async function(request, response) {
-	//request.payload;
-	var newId = await db.addOrder();
+	var order = request.body;
+	var validOrder = order.hasOwnProperty("client_id") && typeof order.client_id == "string" &&
+					order.hasOwnProperty("cart") && typeof order.cart == "object" &&
+					order.hasOwnProperty("total") && typeof order.total == "number";
+	if (!validOrder) {
+		var errMsg = "Request payload is not a valid Order object";
+		console.log(errMsg);
+		response.status("500").send(errMsg);
+		return;
+	}
+	var orderId = await db.addOrder(order);
+	if (orderId instanceof Error) {
+		response.status("500").send(orderId);
+	}
+	else {
+		response.status("200").send(orderId);
+	}
+	response.end();
 });
 
 // Start listening on TCP port
