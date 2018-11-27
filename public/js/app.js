@@ -38,7 +38,7 @@ Store.prototype.removeItemFromCart = function (itemName) {
 
 Store.prototype.syncWithServer = function (onSync) {
     var thisStore = this;
-    ajaxGet(this.serverUrl + "products",
+    ajaxGet(this.serverUrl + "/products",
         function (response) {
             var delta = {};
             console.log(response);
@@ -126,23 +126,25 @@ Store.prototype.checkOut = function (onFinish) {
             for (var prod in thisStore.cart) {
                 totalDue += thisStore.cart[prod] * thisStore.stock[prod].price;
             }
-            // make POST request for checkout
-            ajaxPost(this.serverUrl + "checkout",
-                Order = {
-                    client_id: Math.random(),
-                    cart: thisStore.cart,
-                    total: totalDue
-                },
-                function (response) {
-                    console.log("postResponseSuccess");
-                    alert("Your items were successfully checked out!");
-                    thisStore.cart = {};
-                    thisStore.onupdate();
-                },
-                function (error) {
-                    console.log("postResponseError");
-                    alert("Error: " + error);
-                });
+            if (totalDue > 0) {
+                // make POST request for checkout
+                ajaxPost(thisStore.serverUrl + "/checkout",
+                    {
+                        client_id: Math.random().toString(),
+                        cart: thisStore.cart,
+                        total: totalDue
+                    },
+                    function (response) {
+                        console.log("postResponseSuccess");
+                        alert("Items successfully checked out - Transaction ID: " + response);
+                        thisStore.cart = {};
+                        thisStore.onUpdate();
+                    },
+                    function (error) {
+                        console.log("postResponseError");
+                        alert("Error: " + error);
+                    });
+            }
         }
 
         if (onFinish != null)
@@ -155,7 +157,7 @@ Store.prototype.queryProducts = function (query, callback) {
     var queryString = Object.keys(query).reduce(function (acc, key) {
         return acc + (query[key] ? ((acc ? '&' : '') + key + '=' + query[key]) : '');
     }, '');
-    ajaxGet(this.serverUrl + "products?" + queryString,
+    ajaxGet(this.serverUrl + "/products?" + queryString,
         function (products) {
             Object.keys(products)
                 .forEach(function (itemName) {
@@ -251,7 +253,7 @@ function renderMenu(container, storeInstance) {
     }
 }
 
-var store = new Store("http://localhost:3000/");//https://cpen400a-bookstore.herokuapp.com");
+var store = new Store("http://localhost:3000");//https://cpen400a-bookstore.herokuapp.com");
 var displayed = [];
 
 store.syncWithServer(function (delta) {
@@ -530,14 +532,13 @@ function ajaxGet(url, onSuccess, onError) {
 
 // function for making AJAX POST calls
 function ajaxPost(url, data, onSuccess, onError) {
-    var numRetries = 0;
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", url);
-    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-type", "application/json;charset=UTF-8");
     xhr.onload = function () {
         console.log("xhrStatus = " + xhr.status);
         if (xhr.status == 200) {
-            var response = JSON.parse(xhr.responseText);
+            var response = xhr.responseText;
             onSuccess(response);
         }
         else {
@@ -553,5 +554,5 @@ function ajaxPost(url, data, onSuccess, onError) {
         console.log("onError");
         onError(xhr.responseText);
     }
-    xhr.send(data);
+    xhr.send(JSON.stringify(data));
 }
