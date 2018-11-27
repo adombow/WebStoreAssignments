@@ -315,8 +315,9 @@ store.onUpdate = function (itemName) {
     if (typeof itemName == "undefined") {
         renderProductList(document.getElementById("productView"), this);
         return;
+    } else {
+        renderProduct(document.getElementById("product-" + itemName), this, itemName);
     }
-    renderProduct(document.getElementById("product-" + itemName), this, itemName);
     renderCart(document.getElementById("modal-content"), this);
     renderMenu(document.getElementById("menuView"), this);
 }
