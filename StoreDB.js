@@ -62,7 +62,7 @@ StoreDB.prototype.getProducts = function (queryParams) {
 
 StoreDB.prototype.addOrder = function (order) {
 	return this.connected.then(function (db) {
-		return new Promise(function (resolve, reject)) {
+		return new Promise(function (resolve, reject) {
 			db.collection("orders").insert(order, function (err, result) {
 				if (err) {
 					console.log("Product promise rejected: " + err);
@@ -71,7 +71,7 @@ StoreDB.prototype.addOrder = function (order) {
 					console.log("Product promise succesful: " + result);
 				}
 			});
-		}
+		})
 	})
 }
 
