@@ -126,23 +126,25 @@ Store.prototype.checkOut = function (onFinish) {
             for (var prod in thisStore.cart) {
                 totalDue += thisStore.cart[prod] * thisStore.stock[prod].price;
             }
-            // make POST request for checkout
-            ajaxPost(thisStore.serverUrl + "/checkout",
-                {
-                    client_id: Math.random().toString(),
-                    cart: thisStore.cart,
-                    total: totalDue
-                },
-                function (response) {
-                    console.log("postResponseSuccess");
-                    alert("Items successfully checked out - Transaction ID: " + response);
-                    thisStore.cart = {};
-                    thisStore.onUpdate();
-                },
-                function (error) {
-                    console.log("postResponseError");
-                    alert("Error: " + error);
-                });
+            if (totalDue > 0) {
+                // make POST request for checkout
+                ajaxPost(thisStore.serverUrl + "/checkout",
+                    {
+                        client_id: Math.random().toString(),
+                        cart: thisStore.cart,
+                        total: totalDue
+                    },
+                    function (response) {
+                        console.log("postResponseSuccess");
+                        alert("Items successfully checked out - Transaction ID: " + response);
+                        thisStore.cart = {};
+                        thisStore.onUpdate();
+                    },
+                    function (error) {
+                        console.log("postResponseError");
+                        alert("Error: " + error);
+                    });
+            }
         }
 
         if (onFinish != null)
