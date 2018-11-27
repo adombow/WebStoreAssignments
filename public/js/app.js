@@ -125,7 +125,7 @@ Store.prototype.checkOut = function (onFinish) {
             for (var prod in thisStore.cart) {
                 totalDue += thisStore.cart[prod] * thisStore.stock[prod].price;
             }
-            //alert("The total price of your cart is currently $" + totalDue);
+            // make POST request for checkout
             ajaxPost(this.serverUrl + "checkout",
                 Order = {
                     client_id: Math.random(),
@@ -134,9 +134,13 @@ Store.prototype.checkOut = function (onFinish) {
                 },
                 function(response) {
                     console.log("postResponseSuccess");
+                    alert("Your items were successfully checked out!");
+                    thisStore.cart = {};
+                    thisStore.onupdate();
                 },
                 function(error) {
                     console.log("postResponseError");
+                    alert("Error: " + error);
                 });
         }
 

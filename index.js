@@ -42,8 +42,9 @@ app.get('/products', async function(request, response) {
 });
 
 // Configure '/checkout' endpoint
-app.post("/checkout", function(request, response) {
-
+app.post("/checkout", async function(request, response) {
+	//request.payload;
+	var newId = await db.addOrder();
 });
 
 // Start listening on TCP port
