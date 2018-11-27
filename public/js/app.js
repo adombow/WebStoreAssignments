@@ -135,7 +135,7 @@ Store.prototype.checkOut = function (onFinish) {
                 },
                 function (response) {
                     console.log("postResponseSuccess");
-                    alert("Your items were successfully checked out!");
+                    alert("Items successfully checked out - Transaction ID: " + response);
                     thisStore.cart = {};
                     thisStore.onUpdate();
                 },
