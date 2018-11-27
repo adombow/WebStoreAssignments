@@ -38,7 +38,7 @@ Store.prototype.removeItemFromCart = function (itemName) {
 
 Store.prototype.syncWithServer = function (onSync) {
     var thisStore = this;
-    ajaxGet(this.serverUrl + "/products",
+    ajaxGet(this.serverUrl + "products",
         function (response) {
             var delta = {};
             console.log(response);
@@ -95,6 +95,7 @@ Store.prototype.syncWithServer = function (onSync) {
         },
         function (error) {
             //invoked after all 3 retries fail
+            console.log(error);
         });
 }
 
@@ -124,7 +125,19 @@ Store.prototype.checkOut = function (onFinish) {
             for (var prod in thisStore.cart) {
                 totalDue += thisStore.cart[prod] * thisStore.stock[prod].price;
             }
-            alert("The total price of your cart is currently $" + totalDue);
+            //alert("The total price of your cart is currently $" + totalDue);
+            ajaxPost(this.serverUrl + "checkout",
+                Order = {
+                    client_id: Math.random(),
+                    cart: thisStore.cart,
+                    total: totalDue
+                },
+                function(response) {
+                    console.log("postResponseSuccess");
+                },
+                function(error) {
+                    console.log("postResponseError");
+                });
         }
 
         if (onFinish != null)
@@ -234,7 +247,7 @@ function renderMenu(container, storeInstance){
 }
 
 var store = new Store("http://localhost:3000/");//https://cpen400a-bookstore.herokuapp.com");
-var displayed = {};
+var displayed = [];
 
 store.syncWithServer(function(delta){
     for(var prodIds in delta){
@@ -364,7 +377,8 @@ function renderProductList(container, storeInstance) {
     productList.setAttribute("id", "productList");
     container.appendChild(productList);
 
-    for (var product in displayed) {
+    for (var i = 0; i < displayed.length; i++) {
+        var product = displayed[i];
         var listItem = document.createElement("li");
         listItem.setAttribute("class", "product");
         listItem.setAttribute("id", "product-" + product);
@@ -476,6 +490,7 @@ function ajaxGet(url, onSuccess, onError) {
             xhr.onload = function () {
                 console.log("xhrStatus = " + xhr.status);
                 if (xhr.status == 200) {
+                    console.log(xhr);
                     var response = JSON.parse(xhr.responseText);
                     onSuccess(response);
                     return;
@@ -507,4 +522,32 @@ function ajaxGet(url, onSuccess, onError) {
     }
 
     getRequest();
+}
+
+// function for making AJAX POST calls
+function ajaxPost(url, data, onSuccess, onError) {
+    var numRetries = 0;
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", url);
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhr.onload = function () {
+        console.log("xhrStatus = " + xhr.status);
+        if (xhr.status == 200) {
+            var response = JSON.parse(xhr.responseText);
+            onSuccess(response);
+        }
+        else {
+            onError(xhr.responseText);
+        }
+    }
+    xhr.timeout = 10000; // 10 seconds
+    xhr.ontimeout = function () {
+        console.log("onTimeout");
+        onError("Timed out");
+    }
+    xhr.onerror = function () {
+        console.log("onError");
+        onError(xhr.responseText);
+    }
+    xhr.send(data);
 }
