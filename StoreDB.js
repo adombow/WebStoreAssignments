@@ -63,13 +63,30 @@ StoreDB.prototype.getProducts = function (queryParams) {
 StoreDB.prototype.addOrder = function (order) {
 	return this.connected.then(function (db) {
 		return new Promise(function (resolve, reject) {
-			db.collection("orders").insert(order, function (err, result) {
-				if (err) {
-					console.log("Product promise rejected: " + err);
-					reject(err);
-				} else {
-					console.log("Product promise succesful: " + result);
+			// db.collection("orders").insertOne(order, function (err, result) {
+			// 	if (err) {
+			// 		console.log("Order promise rejected: " + err);
+			// 		reject(err);
+			// 	} else {
+			// 		console.log("Order promise succesful: " + result);
+			// 		for (var productName in order.cart) {
+			// 			var quantity = order.cart[productName];
+			// 			db.collection("products").updateOne({ "_id": productName }, { $inc: { "quantity": -quantity } });
+			// 		}
+			// 		resolve(result.insertedId);
+			// 	}
+			// });
+			db.collection("orders").insertOne(order)
+			.then(result => {
+				console.log("Order promise succesful: " + result);
+				for (var productName in order.cart) {
+					var quantity = order.cart[productName];
+					db.collection("products").updateOne({ "_id": productName }, { $inc: { "quantity": -quantity } });
 				}
+				resolve(result.insertedId);
+			}, error => {
+				console.log("Order promise rejected: " + err);
+				reject(error);
 			});
 		})
 	})

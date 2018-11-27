@@ -155,7 +155,7 @@ Store.prototype.queryProducts = function (query, callback) {
     var queryString = Object.keys(query).reduce(function (acc, key) {
         return acc + (query[key] ? ((acc ? '&' : '') + key + '=' + query[key]) : '');
     }, '');
-    ajaxGet(this.serverUrl + "/products?" + queryString,
+    ajaxGet(this.serverUrl + "products?" + queryString,
         function (products) {
             Object.keys(products)
                 .forEach(function (itemName) {
