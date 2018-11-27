@@ -96,6 +96,7 @@ Store.prototype.syncWithServer = function (onSync) {
         function (error) {
             //invoked after all 3 retries fail
             console.log(error);
+            thisStore.onUpdate();
         });
 }
 
@@ -312,14 +313,13 @@ window.addEventListener("load", function () {
 });
 
 store.onUpdate = function (itemName) {
+    renderMenu(document.getElementById("menuView"), this);
     if (typeof itemName == "undefined") {
         renderProductList(document.getElementById("productView"), this);
         return;
-    } else {
-        renderProduct(document.getElementById("product-" + itemName), this, itemName);
     }
+    renderProduct(document.getElementById("product-" + itemName), this, itemName);
     renderCart(document.getElementById("modal-content"), this);
-    renderMenu(document.getElementById("menuView"), this);
 }
 
 function renderProduct(container, storeInstance, itemName) {
