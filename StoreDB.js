@@ -27,10 +27,10 @@ function StoreDB(mongoUrl, dbName) {
 StoreDB.prototype.getProducts = function (queryParams) {
 	var query = { $and: [] };
 	if (queryParams.hasOwnProperty("minPrice")) {
-		query.$and.push({ "price": { $gte: queryParams.minPrice } });
+		query.$and.push({ "price": { $gte: parseInt(queryParams.minPrice, 10) } });
 	}
 	if (queryParams.hasOwnProperty("maxPrice")) {
-		query.$and.push({ "price": { $lte: queryParams.maxPrice } });
+		query.$and.push({ "price": { $lte: parseInt(queryParams.maxPrice, 10) } });
 	}
 	if (queryParams.hasOwnProperty("category")) {
 		query.$and.push({ "category": queryParams.category });
