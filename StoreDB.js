@@ -63,31 +63,37 @@ StoreDB.prototype.getProducts = function (queryParams) {
 StoreDB.prototype.addOrder = function (order) {
 	return this.connected.then(function (db) {
 		return new Promise(function (resolve, reject) {
-			// db.collection("orders").insertOne(order, function (err, result) {
-			// 	if (err) {
-			// 		console.log("Order promise rejected: " + err);
-			// 		reject(err);
-			// 	} else {
-			// 		console.log("Order promise succesful: " + result);
-			// 		for (var productName in order.cart) {
-			// 			var quantity = order.cart[productName];
-			// 			db.collection("products").updateOne({ "_id": productName }, { $inc: { "quantity": -quantity } });
-			// 		}
-			// 		resolve(result.insertedId);
-			// 	}
-			// });
-			db.collection("orders").insertOne(order)
-			.then(result => {
-				console.log("Order promise succesful: " + result);
-				for (var productName in order.cart) {
-					var quantity = order.cart[productName];
-					db.collection("products").updateOne({ "_id": productName }, { $inc: { "quantity": -quantity } });
-				}
-				resolve(result.insertedId);
-			}, error => {
-				console.log("Order promise rejected: " + err);
-				reject(error);
-			});
+			var validOrder = order.hasOwnProperty("client_id") && typeof order.client_id == "string" &&
+					order.hasOwnProperty("cart") && typeof order.cart == "object" &&
+					order.hasOwnProperty("total") && typeof order.total == "number";
+			if (!validOrder) {
+				var errMsg = "Order object is invalid";
+				reject(new Error(errMsg));
+			}
+			else {
+				db.collection("orders").insertOne(order)
+				.then(result => {
+					console.log("Order promise succesful: " + result);
+					var itemCount = Object.keys(order.cart).length;
+					for (var productName in order.cart) {
+						var quantity = order.cart[productName];
+						db.collection("products").updateOne({ "_id": productName }, { $inc: { "quantity": -quantity } })
+						.then(ack => {
+							itemCount--;
+							if (itemCount == 0) {
+								// all item quantities have been decremented, so resolve
+								resolve(result.insertedId);
+							}
+						}, err => {
+							console.log("Could not decrement quantity for " + productName + " : " + err);
+							reject(error);
+						});
+					}
+				}, error => {
+					console.log("Order promise rejected: " + err);
+					reject(error);
+				});
+			}
 		})
 	})
 }
