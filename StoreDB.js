@@ -38,7 +38,7 @@ StoreDB.prototype.getProducts = function (queryParams) {
 	return this.connected.then(function (db) {
 		return new Promise(function (resolve, reject) {
 			var products = {};
-			db.products.find(query.$and.length > 0 ? query : {}).toArray(function (err, result) {
+			db.collection("products").find(query.$and.length > 0 ? query : {}).toArray(function (err, result) {
 				if (err) {
 					console.log("Product promise rejected: " + err);
 					reject(err);
@@ -62,7 +62,16 @@ StoreDB.prototype.getProducts = function (queryParams) {
 
 StoreDB.prototype.addOrder = function (order) {
 	return this.connected.then(function (db) {
-		// TODO: Implement functionality
+		return new Promise(function (resolve, reject)) {
+			db.collection("orders").insert(order, function (err, result) {
+				if (err) {
+					console.log("Product promise rejected: " + err);
+					reject(err);
+				} else {
+					console.log("Product promise succesful: " + result);
+				}
+			});
+		}
 	})
 }
 
