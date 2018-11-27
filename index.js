@@ -3,7 +3,7 @@ var path = require('path');
 var express = require('express');
 var storeDB = require('StoreDB');
 
-var db = storeDB("mongodb://127.0.0.1:27017", "cpen400a-bookstore");
+var db = storeDB("mongodb://localhost:27017", "cpen400a-bookstore");
 
 // Declare application parameters
 var PORT = process.env.PORT || 3000;
