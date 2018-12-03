@@ -3,7 +3,7 @@ Task 2:  	2 / 2
 Task 3:  	3 / 3
 Task 4:  	2 / 2
 Task 5:  	1 / 1
-TASK 6:  	1 / 1
+Task 6:  	1 / 1
 Task 7:  	2 / 2
 Task 8:  	2 / 2
 Total:  	15 / 15
